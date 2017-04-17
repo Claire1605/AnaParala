@@ -35,7 +35,7 @@ public class DrawMesh : MonoBehaviour {
     }
 	
 	void Update () {
-       DrawQuad();
+      // DrawQuad();
     }
 
     void DrawQuad()

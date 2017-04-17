@@ -12,10 +12,17 @@ public class Movement : MonoBehaviour {
     [HideInInspector]
     public float speed;
     public float speedRatio;
+    public bool freeMovement = false;
 
     void Update () {
-        v = Input.GetAxis("Vertical");
+        if (transform.position.y > 90)
+            freeMovement = true;
 
+        if (freeMovement)
+            v = Input.GetAxis("Vertical");
+        else
+            v = 0.7f;
+           
         if (v > 0)
             progress += v / speed * speedRatio;
         if (progress > 1f)
@@ -27,6 +34,24 @@ public class Movement : MonoBehaviour {
         Vector3 position = spline.GetPoint(progress);
         position.z -= 0.2f;
         transform.localPosition = position;
+    }
 
+    public IEnumerator MoveToLineEnd(float currentProgress, GameObject newLine)
+    {
+        float i = 0;
+        float rate = 2;
+        bool done = false;
+        while (i < 1 && !done)
+        {
+            if (progress >= 1)
+                done = true;
+            i += Time.deltaTime * rate;
+            if (!done)
+                transform.localPosition = Vector3.Lerp(spline.GetPoint(currentProgress), spline.GetPoint(1), i);
+            yield return new WaitForEndOfFrame();
+        }
+        spline = newLine.GetComponent<BezierSpline>();
+        progress = 0;
+        speed = 10 * Vector3.Distance(spline.GetPoint(1), spline.GetPoint(0));
     }
 }

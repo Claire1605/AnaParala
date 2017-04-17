@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class SegmentSetup : MonoBehaviour {
 
-    [SerializeField]
-    private GameObject parent;
-    public GameObject Parent { get { return parent; } }
-    [SerializeField]
+    public GameObject Parent;
     public List<GameObject> Children = new List<GameObject>();
     public bool stageConnector;
     public GameObject nextStage;

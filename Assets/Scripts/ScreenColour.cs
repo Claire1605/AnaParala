@@ -12,12 +12,75 @@ public class ScreenColour : MonoBehaviour {
     public Color twenties;
     public Color present;
 
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
+    public float babyHeight;
+    public float toddlerHeight;
+    public float childHeight;
+    public float teenageHeight;
+    public float twentiesHeight;
+    public float presentHeight;
+
+    private bool beginningDone = false;
+    private bool babyDone = false;
+    private bool toddlerDone = false;
+    private bool childDone = false;
+    private bool teenageDone = false;
+    private bool twentiesDone = false;
+    private bool presentDone = false;
+
+
+    public GameObject player;
+    public Camera camera;
+
 	void Update () {
-		
-	}
+        if (player.transform.position.y >= 0 && !beginningDone)
+            StartCoroutine(FadeIn(beginning, baby));
+        if (player.transform.position.y > babyHeight && !babyDone)
+        {
+            babyDone = true;
+            StartCoroutine(ChangeScreenColour(baby, toddler, babyHeight, toddlerHeight));
+        }  
+        if (player.transform.position.y > toddlerHeight && !toddlerDone)
+        {
+            toddlerDone = true;
+            StartCoroutine(ChangeScreenColour(toddler, child, toddlerHeight, childHeight));
+        }
+        if (player.transform.position.y > childHeight && !childDone)
+        {
+            childDone = true;
+            StartCoroutine(ChangeScreenColour(child, teenage, childHeight, teenageHeight));
+        }
+        if (player.transform.position.y > teenageHeight && !teenageDone)
+        {
+            teenageDone = true;
+            StartCoroutine(ChangeScreenColour(teenage, twenties, teenageHeight, twentiesHeight));
+        }
+        if (player.transform.position.y > twentiesHeight && !twentiesDone)
+        {
+            twentiesDone = true;
+            StartCoroutine(ChangeScreenColour(twenties, present, twentiesHeight, presentHeight));
+        }
+    }
+
+    public IEnumerator FadeIn(Color start, Color end)
+    {
+        beginningDone = true;
+        float i = 0;
+        while (i < 1)
+        {
+            i += Time.deltaTime * 1f;
+            camera.backgroundColor = Color.Lerp(start, end, i);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator ChangeScreenColour(Color start, Color end, float startY, float endY)
+    {
+        float i = 0;
+        while (i <1)
+        {  
+            i = 1-((endY - player.transform.position.y) / (endY-startY));
+            camera.backgroundColor = Color.Lerp(start, end, i);
+            yield return new WaitForEndOfFrame();
+        }
+    }
 }

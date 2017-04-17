@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class StageConnect : MonoBehaviour {
 
-    //public List<GameObject> previousStageConnectors = new List<GameObject>();
-    public GameObject stageStart;
+    public List<GameObject> stageChildren = new List<GameObject>();
 
     public void Connect(GameObject connector)
     {
-        //stageStart.GetComponent<SegmentSetup>().Parent = connector;
+        connector.GetComponent<SegmentSetup>().Children.Clear();
+        foreach (var item in stageChildren)
+        {
+            if (item)
+            {
+                connector.GetComponent<SegmentSetup>().Children.Add(item);
+                item.GetComponent<SegmentSetup>().Parent = connector;
+            }
+        }
+        foreach (var item in connector.GetComponent<SegmentSetup>().Children)
+        {
+            if (item)
+                connector.GetComponent<Intersection>().lines.Add(item.GetComponent<BezierSpline>().gameObject);
+        }
+        transform.position = connector.transform.position;
     }
 }

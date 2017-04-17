@@ -5,7 +5,9 @@ using UnityEngine;
 public class Intersection : MonoBehaviour {
 
     private SegmentSetup segmentSetup;
-    private List<GameObject> lines = new List<GameObject>();
+    public List<GameObject> lines = new List<GameObject>();
+    public bool freeChoice = true;
+    public bool flashRed = false;
     private GameObject player;
     private int activeLine = 0;
     private bool chosen = true;
@@ -29,16 +31,33 @@ public class Intersection : MonoBehaviour {
     void OnTriggerEnter(Collider col)
     {
         chosen = false;
+        if (flashRed)
+        {
+            for (int i = 0; i < lines.Count; i++)
+            {
+                StartCoroutine(ColourLerp(i, Color.grey, Color.red));
+                StartCoroutine(ColourLerp(i, Color.red, Color.grey));
+            }
+            for (int i = 0; i < lines.Count; i++)
+            {
+               
+            }
+        }
     }
 
 	void Update () {
-        
         if (!chosen)
         {
-            if (canMoveUp && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)))
+            if (!freeChoice)
+            {
+                ChooseLine(0);
+                MoveToNewLine();
+                StartCoroutine(ColourLerp(activeLine, lines[activeLine].GetComponentInChildren<MeshRenderer>().material.color, Color.black));
+            }
+            else if (canMoveUp && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)))
             {
                 MoveToNewLine();
-                StartCoroutine(ColourLerp(activeLine, Color.red, Color.black));
+                StartCoroutine(ColourLerp(activeLine, lines[activeLine].GetComponentInChildren<MeshRenderer>().material.color, Color.black));
                 canMoveUp = false;
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) && !chosen)
@@ -85,9 +104,7 @@ public class Intersection : MonoBehaviour {
     void MoveToNewLine()
     {
         chosen = true;
-        player.GetComponent<Movement>().spline = lines[activeLine].GetComponent<BezierSpline>();
-        player.GetComponent<Movement>().progress = 0;
-        player.GetComponent<Movement>().speed = 10 * Vector3.Distance(player.GetComponent<Movement>().spline.GetPoint(1), player.GetComponent<Movement>().spline.GetPoint(0));
+        player.GetComponent<Movement>().StartCoroutine(player.GetComponent<Movement>().MoveToLineEnd(player.GetComponent<Movement>().progress, lines[activeLine]));
         if (lines[activeLine].GetComponent<SegmentSetup>().stageConnector)
         {
             lines[activeLine].GetComponent<SegmentSetup>().nextStage.GetComponent<StageConnect>().Connect(lines[activeLine]);
