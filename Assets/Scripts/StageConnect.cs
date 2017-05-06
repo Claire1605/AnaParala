@@ -17,6 +17,7 @@ public class StageConnect : MonoBehaviour {
                 item.GetComponent<SegmentSetup>().Parent = connector;
             }
         }
+        connector.GetComponent<Intersection>().lines.Clear();
         foreach (var item in connector.GetComponent<SegmentSetup>().Children)
         {
             if (item)

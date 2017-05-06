@@ -12,17 +12,17 @@ public class Movement : MonoBehaviour {
     [HideInInspector]
     public float speed;
     public float speedRatio;
-    public bool freeMovement = false;
+   // public bool freeMovement = false;
 
     void Update () {
-        if (transform.position.y > 90)
-            freeMovement = true;
+        //if (transform.position.y > 90)
+        //    freeMovement = true;
 
-        if (freeMovement)
-            v = Input.GetAxis("Vertical");
-        else
-            v = 0.7f;
-           
+        //if (freeMovement)
+        //    v = Input.GetAxis("Vertical");
+        //else
+        //    v = 0.7f;
+        v = Input.GetAxis("Vertical");
         if (v > 0)
             progress += v / speed * speedRatio;
         if (progress > 1f)

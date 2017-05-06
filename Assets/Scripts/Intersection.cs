@@ -6,7 +6,7 @@ public class Intersection : MonoBehaviour {
 
     private SegmentSetup segmentSetup;
     public List<GameObject> lines = new List<GameObject>();
-    public bool freeChoice = true;
+   // public bool freeChoice = true;
     public bool flashRed = false;
     private GameObject player;
     private int activeLine = 0;
@@ -31,6 +31,8 @@ public class Intersection : MonoBehaviour {
     void OnTriggerEnter(Collider col)
     {
         chosen = false;
+        if (GetComponent<SegmentSetup>().stageConnector)
+            GetComponent<SegmentSetup>().nextStage.gameObject.SetActive(true);
         if (flashRed)
         {
             for (int i = 0; i < lines.Count; i++)
@@ -38,23 +40,19 @@ public class Intersection : MonoBehaviour {
                 StartCoroutine(ColourLerp(i, Color.grey, Color.red));
                 StartCoroutine(ColourLerp(i, Color.red, Color.grey));
             }
-            for (int i = 0; i < lines.Count; i++)
-            {
-               
-            }
         }
     }
 
 	void Update () {
         if (!chosen)
         {
-            if (!freeChoice)
-            {
-                ChooseLine(0);
-                MoveToNewLine();
-                StartCoroutine(ColourLerp(activeLine, lines[activeLine].GetComponentInChildren<MeshRenderer>().material.color, Color.black));
-            }
-            else if (canMoveUp && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)))
+            //if (!freeChoice)
+            //{
+            //    ChooseLine(0);
+            //    MoveToNewLine();
+            //    StartCoroutine(ColourLerp(activeLine, lines[activeLine].GetComponentInChildren<MeshRenderer>().material.color, Color.black));
+            //}
+            if (canMoveUp && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)))
             {
                 MoveToNewLine();
                 StartCoroutine(ColourLerp(activeLine, lines[activeLine].GetComponentInChildren<MeshRenderer>().material.color, Color.black));
@@ -120,6 +118,20 @@ public class Intersection : MonoBehaviour {
         {
             i += Time.deltaTime * rate;
             lines[lineIndex].GetComponentInChildren<MeshRenderer>().material.color = Color.Lerp(start, end, i);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    IEnumerator LineFadeIn(int lineIndex)
+    {
+        float i = 0;
+        float rate = 2;
+
+        while (i < 1)
+        {
+            i += Time.deltaTime * rate;
+            lines[lineIndex].GetComponent<Renderer>().material.color = Color.Lerp(new Color(0.5f, 0.5f, 0.5f, 0), new Color(0.5f, 0.5f, 0.5f, 1), i);
+            lines[lineIndex].GetComponentInChildren<MeshRenderer>().material.color = Color.Lerp(new Color(0.5f, 0.5f, 0.5f, 0), new Color(0.5f, 0.5f, 0.5f, 1), i);
             yield return new WaitForEndOfFrame();
         }
     }

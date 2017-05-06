@@ -35,7 +35,7 @@ public class DrawMesh : MonoBehaviour {
     }
 	
 	void Update () {
-      // DrawQuad();
+       DrawQuad();
     }
 
     void DrawQuad()
@@ -47,17 +47,17 @@ public class DrawMesh : MonoBehaviour {
 
         for (int i = 0; i <= YSegments; i++)
         {
-            v = (bSpline.GetPoint((float)i / YSegments) + bSpline.GetDirection((float)i / YSegments)) - bSpline.GetPoint((float)i / YSegments); //get tangent of point to spline
-            P3 = new Vector3(-v.y, v.x) / Mathf.Sqrt(Mathf.Pow(v.x, 2) + Mathf.Pow(v.y, 2)) * width;
+            v = bSpline.GetDirection((float)i / YSegments); //get tangent of point to spline
+            P3 = new Vector3(-v.y, v.x) / Mathf.Sqrt(Mathf.Pow(v.x, 2) + Mathf.Pow(v.y, 2)) * width; //get recipricol
 
             for (int j = 0; j <= XSegments; j++)
             {
-                float a = YSegments / (0.05f * ((i - YSegments / 2)* (i - YSegments / 2)) + 10f);
-                xIncrement = new Vector3(-v.y, v.x) / Mathf.Sqrt(Mathf.Pow(v.x, 2) + Mathf.Pow(v.y, 2)) * ( width / XSegments) * 2; //(YSegments / 2 >= i ? Mathf.Sqrt(i) : Mathf.Sqrt(YSegments - i))
+                xIncrement = P3 / XSegments * 2; //(YSegments / 2 >= i ? Mathf.Sqrt(i) : Mathf.Sqrt(YSegments - i))
                 points[j, i] = transform.InverseTransformPoint(bSpline.GetPoint((float)i / YSegments) + (P3) - (xIncrement * j)); //i * P3 and i on the line above give the change in width along y
                 points[j, i].z = 0.1f;
 
                 //Tapered
+                //float a = YSegments / (0.05f * ((i - YSegments / 2)* (i - YSegments / 2)) + 10f);
                 //xIncrement = new Vector3(-v.y, v.x) / Mathf.Sqrt(Mathf.Pow(v.x, 2) + Mathf.Pow(v.y, 2)) * (a * width / XSegments) * 2; //(YSegments / 2 >= i ? Mathf.Sqrt(i) : Mathf.Sqrt(YSegments - i))
                 //points[j, i] = transform.InverseTransformPoint(bSpline.GetPoint((float)i / YSegments) + (a * P3) - (xIncrement * j)); //i * P3 and i on the line above give the change in width along y
                 //points[j, i].z = 0.5f;
