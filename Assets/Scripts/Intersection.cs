@@ -8,6 +8,11 @@ public class Intersection : MonoBehaviour {
     public List<GameObject> lines = new List<GameObject>();
    // public bool freeChoice = true;
     public bool flashRed = false;
+    public bool lineDoubt = false;
+    [Range(0,1)]
+    public float dummyLineWidth = 0;
+    [Range(0,1)]
+    public float dummyLineSpeed = 0;
     private GameObject player;
     private int activeLine = 0;
     private bool chosen = true;
@@ -32,7 +37,15 @@ public class Intersection : MonoBehaviour {
     {
         chosen = false;
         if (GetComponent<SegmentSetup>().stageConnector)
+        {
             GetComponent<SegmentSetup>().nextStage.gameObject.SetActive(true);
+            foreach (var item in GetComponent<SegmentSetup>().nextStage.GetComponent<StageConnect>().stageChildren)
+            {
+                Color c = item.GetComponent<Renderer>().material.GetColor("_Color");
+                item.GetComponent<Renderer>().material.SetColor("_Color", new Color(c.r, c.g, c.b, 1));
+                StartCoroutine(LineFadeIn(item.GetComponentInChildren<MeshRenderer>(), item.GetComponentInChildren<MeshRenderer>().material.GetColor("_Color")));
+            }
+        }  
         if (flashRed)
         {
             for (int i = 0; i < lines.Count; i++)
@@ -122,7 +135,7 @@ public class Intersection : MonoBehaviour {
         }
     }
 
-    IEnumerator LineFadeIn(int lineIndex)
+    IEnumerator LineFadeIn(MeshRenderer line, Color colour)
     {
         float i = 0;
         float rate = 2;
@@ -130,8 +143,8 @@ public class Intersection : MonoBehaviour {
         while (i < 1)
         {
             i += Time.deltaTime * rate;
-            lines[lineIndex].GetComponent<Renderer>().material.color = Color.Lerp(new Color(0.5f, 0.5f, 0.5f, 0), new Color(0.5f, 0.5f, 0.5f, 1), i);
-            lines[lineIndex].GetComponentInChildren<MeshRenderer>().material.color = Color.Lerp(new Color(0.5f, 0.5f, 0.5f, 0), new Color(0.5f, 0.5f, 0.5f, 1), i);
+            //line.material.color = Color.Lerp(new Color(colour.r, colour.g, colour.b, 0), new Color(colour.r, colour.g, colour.b, 1), i);
+            line.material.SetFloat("_AlphaHeight", Mathf.Lerp(-0.25f, 0, i));
             yield return new WaitForEndOfFrame();
         }
     }

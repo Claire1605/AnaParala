@@ -5,12 +5,13 @@
 		_Color ("Colour", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
 		_Width ("Width", Range(0,1)) = 1
+		_AlphaHeight ("Alpha Height", Range(-0.25,1)) = -0.25
 	}
 	SubShader
 	{
 		Tags { "RenderType"="Transparent"  "DisableBatching" = "True" }
 		LOD 100
-			Blend One OneMinusSrcAlpha
+		Blend One OneMinusSrcAlpha
 		Pass
 		{
 			CGPROGRAM
@@ -42,6 +43,7 @@
 			float4 _MainTex_ST;
 			half4 _Color;
 			float _Width;
+			float _AlphaHeight;
 			
 			v2f vert (appdata v)
 			{
@@ -50,7 +52,6 @@
 				o.vertex = UnityObjectToClipPos(v.vertex); 
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.color =  v.color * _Color;
-				
 				//UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
@@ -58,7 +59,11 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+
+				float a = _AlphaHeight - i.uv.y;
+				col = float4(col.r, col.g, col.b, lerp(0, 4, a) + 1);
 				col.rgb *= col.a;
+
 				//UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
 			}

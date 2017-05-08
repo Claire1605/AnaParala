@@ -6,6 +6,8 @@ public class Movement : MonoBehaviour {
 
     public BezierSpline spline;
     [HideInInspector]
+    public MeshRenderer line;
+    [HideInInspector]
     public float progress;
     [HideInInspector]
     private float v;
@@ -14,6 +16,10 @@ public class Movement : MonoBehaviour {
     public float speedRatio;
    // public bool freeMovement = false;
 
+    void Start()
+    {
+        line = spline.GetComponentInChildren<MeshRenderer>();
+    }
     void Update () {
         //if (transform.position.y > 90)
         //    freeMovement = true;
@@ -34,6 +40,7 @@ public class Movement : MonoBehaviour {
         Vector3 position = spline.GetPoint(progress);
         position.z -= 0.2f;
         transform.localPosition = position;
+        line.material.SetFloat("_AlphaHeight", progress);
     }
 
     public IEnumerator MoveToLineEnd(float currentProgress, GameObject newLine)
@@ -51,6 +58,7 @@ public class Movement : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         }
         spline = newLine.GetComponent<BezierSpline>();
+        line = newLine.GetComponentInChildren<MeshRenderer>();
         progress = 0;
         speed = 10 * Vector3.Distance(spline.GetPoint(1), spline.GetPoint(0));
     }

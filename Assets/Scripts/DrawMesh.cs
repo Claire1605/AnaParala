@@ -112,6 +112,18 @@ public class DrawMesh : MonoBehaviour {
         }
     }
 
+    public IEnumerator growLine(MeshRenderer line, float speed)
+    {
+        float i = 0;
+        float rate = speed;
+        while (i < 1)
+        {
+            i += Time.fixedDeltaTime * rate;
+            line.material.SetFloat("_AlphaHeight", Mathf.Lerp(0,1, anim.Evaluate(i)));
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
     //void OnDrawGizmos()
     //{
     //    points = new Vector3[XSegments + 1, YSegments + 1];
