@@ -21,7 +21,11 @@ public class StageConnect : MonoBehaviour {
         foreach (var item in connector.GetComponent<SegmentSetup>().Children)
         {
             if (item)
+            {
                 connector.GetComponent<Intersection>().lines.Add(item.GetComponent<BezierSpline>().gameObject);
+                connector.GetComponent<Intersection>().envyLines.Add(item.GetComponent<BezierSpline>().gameObject);
+            }
+               
         }
         transform.position = connector.transform.position;
     }

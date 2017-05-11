@@ -11,13 +11,13 @@ public class LineDynamic : MonoBehaviour {
 	}
 	
 	void Update () {
-       if (Input.GetKeyDown(KeyCode.Space))
-        {
-            drawMesh.StartCoroutine(drawMesh.changeWidth(0.2f, 0.8f));
-        }
-       if (Input.GetKeyDown(KeyCode.Return))
-        {
-            drawMesh.StartCoroutine(drawMesh.changeWidth(0.8f, 0.2f));
-        }
+       //if (Input.GetKeyDown(KeyCode.Space))
+       // {
+       //     drawMesh.StartCoroutine(drawMesh.changeWidth(GetComponent<MeshRenderer>(), 0.2f, 0.8f));
+       // }
+       //if (Input.GetKeyDown(KeyCode.Return))
+       // {
+       //     drawMesh.StartCoroutine(drawMesh.changeWidth(GetComponent<MeshRenderer>(), 0.8f, 0.2f));
+       // }
 	}
 }

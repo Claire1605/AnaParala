@@ -6,7 +6,6 @@ using UnityEngine;
 public class DrawMesh : MonoBehaviour {
 
     private BezierSpline bSpline;
-    public AnimationCurve anim;
 
     public float width = 1;
     [Range(1, 40)]
@@ -99,20 +98,20 @@ public class DrawMesh : MonoBehaviour {
         }
     }
 
-    public IEnumerator changeWidth(float startWidth, float endWidth)
+    public IEnumerator changeWidth(MeshRenderer line, float startWidth, float endWidth, AnimationCurve anim)
     {
         float i = 0;
         float rate = 0.5f;
         while (i <1)
         {
             i += Time.fixedDeltaTime * rate;
-            width = Mathf.Lerp(startWidth, endWidth, anim.Evaluate(i));
+            line.GetComponent<DrawMesh>().width = Mathf.Lerp(startWidth, endWidth, anim.Evaluate(i));
             DrawQuad();
             yield return new WaitForFixedUpdate();
         }
     }
 
-    public IEnumerator growLine(MeshRenderer line, float speed)
+    public IEnumerator growLine(MeshRenderer line, float speed, AnimationCurve anim)
     {
         float i = 0;
         float rate = speed;
