@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ScreenColour : MonoBehaviour {
 
+    public AnimationCurve cameraZoomCurve;
     public Color beginning;
     public Color baby;
     public Color toddler;
@@ -29,7 +30,7 @@ public class ScreenColour : MonoBehaviour {
 
 
     public GameObject player;
-    public Camera camera;
+    public Camera gameCamera;
 
 	void Update () {
         if (player.transform.position.y >= 0 && !beginningDone)
@@ -59,6 +60,9 @@ public class ScreenColour : MonoBehaviour {
             twentiesDone = true;
             StartCoroutine(ChangeScreenColour(twenties, present, twentiesHeight, presentHeight));
         }
+
+        //Camera Zoom
+      //  gameCamera.transform.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y, -15 - ((cameraZoonCurve.Evaluate(player.transform.position.y/100))*45)); //change 100 to whatever max Y is in game
     }
 
     public IEnumerator FadeIn(Color start, Color end)
@@ -68,7 +72,7 @@ public class ScreenColour : MonoBehaviour {
         while (i < 1)
         {
             i += Time.deltaTime * 1f;
-            camera.backgroundColor = Color.Lerp(start, end, i);
+            gameCamera.backgroundColor = Color.Lerp(start, end, i);
             yield return new WaitForEndOfFrame();
         }
     }
@@ -79,7 +83,7 @@ public class ScreenColour : MonoBehaviour {
         while (i <1)
         {  
             i = 1-((endY - player.transform.position.y) / (endY-startY));
-            camera.backgroundColor = Color.Lerp(start, end, i);
+            gameCamera.backgroundColor = Color.Lerp(start, end, i);
             yield return new WaitForEndOfFrame();
         }
     }

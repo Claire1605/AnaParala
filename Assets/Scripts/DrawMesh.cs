@@ -111,14 +111,14 @@ public class DrawMesh : MonoBehaviour {
         }
     }
 
-    public IEnumerator growLine(MeshRenderer line, float speed, AnimationCurve anim)
+    public IEnumerator growLine(MeshRenderer line, float speed, float ratio, AnimationCurve anim)
     {
         float i = 0;
         float rate = speed;
         while (i < 1)
         {
             i += Time.fixedDeltaTime * rate;
-            line.material.SetFloat("_AlphaHeight", Mathf.Lerp(0,1, anim.Evaluate(i)));
+            line.material.SetFloat("_AlphaHeight", Mathf.Lerp(0,ratio, anim.Evaluate(i)));
             yield return new WaitForFixedUpdate();
         }
     }

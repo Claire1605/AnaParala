@@ -17,12 +17,12 @@ public class StageConnect : MonoBehaviour {
                 item.GetComponent<SegmentSetup>().Parent = connector;
             }
         }
-        connector.GetComponent<Intersection>().lines.Clear();
+        connector.GetComponent<Intersection>().childLines.Clear();
         foreach (var item in connector.GetComponent<SegmentSetup>().Children)
         {
             if (item)
             {
-                connector.GetComponent<Intersection>().lines.Add(item.GetComponent<BezierSpline>().gameObject);
+                connector.GetComponent<Intersection>().childLines.Add(item.GetComponent<BezierSpline>().gameObject);
                 connector.GetComponent<Intersection>().envyLines.Add(item.GetComponent<BezierSpline>().gameObject);
             }
                

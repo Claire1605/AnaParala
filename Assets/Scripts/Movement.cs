@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour {
 
+    public Score score;
     public BezierSpline spline;
     [HideInInspector]
     public MeshRenderer line;
@@ -14,20 +15,20 @@ public class Movement : MonoBehaviour {
     [HideInInspector]
     public float speed;
     public float speedRatio;
-   // public bool freeMovement = false;
+    [HideInInspector]
+    public List<MeshRenderer> envyLines = new List<MeshRenderer>();
+    [HideInInspector]
+    public bool showIntersection;
+    [HideInInspector]
+    public bool rendDone;
+    private bool stage2reached = false;
 
     void Start()
     {
         line = spline.GetComponentInChildren<MeshRenderer>();
     }
     void Update () {
-        //if (transform.position.y > 90)
-        //    freeMovement = true;
-
-        //if (freeMovement)
-        //    v = Input.GetAxis("Vertical");
-        //else
-        //    v = 0.7f;
+       // Debug.Log(line.gameObject.GetComponentInParent<Intersection>().gameObject.name.ToString());
         v = Input.GetAxis("Vertical");
         if (v > 0)
             progress += v / speed * speedRatio;
@@ -37,10 +38,21 @@ public class Movement : MonoBehaviour {
         if (progress < 0f)
             progress = 0f;
 
+        if (progress > 0.6f)
+            showIntersection = true;
+
         Vector3 position = spline.GetPoint(progress);
         position.z -= 0.2f;
         transform.localPosition = position;
         line.material.SetFloat("_AlphaHeight", progress);
+        if (envyLines.Count>0 && progress <0.8f)
+        {
+            foreach (var item in envyLines)
+            {
+                if (item.material.GetFloat("_AlphaHeight") <= 0.7f)
+                    item.material.SetFloat("_AlphaHeight", progress * 2);
+            }
+        }
     }
 
     public IEnumerator MoveToLineEnd(float currentProgress, GameObject newLine)
@@ -61,5 +73,13 @@ public class Movement : MonoBehaviour {
         line = newLine.GetComponentInChildren<MeshRenderer>();
         progress = 0;
         speed = 10 * Vector3.Distance(spline.GetPoint(1), spline.GetPoint(0));
+        showIntersection = false;
+        rendDone = false;
+        score.UpdateScore(line);
+        if (line.GetComponentInParent<Intersection>().gameObject.tag == "Stage2" && !stage2reached)
+        {
+            stage2reached = true;
+            score.Visible();
+        }
     }
 }

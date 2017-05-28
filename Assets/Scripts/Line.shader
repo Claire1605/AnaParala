@@ -11,14 +11,13 @@
 	{
 		Tags { "RenderType"="Transparent"  "DisableBatching" = "True" }
 		LOD 100
-		Blend One OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha
 		Pass
 		{
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog
-			
 			#include "UnityCG.cginc"
 
 			struct appdata
@@ -60,9 +59,9 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv) * _Color;
 
-				float a = _AlphaHeight - i.uv.y;
-				col = float4(col.r, col.g, col.b, lerp(0, 4, a) + 1);
-				col.rgb *= col.a;
+				float alpha = _AlphaHeight - i.uv.y;
+				col.a = lerp(0, 4, alpha) + 1;
+				//col.rgb *= col.a;
 
 				//UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
