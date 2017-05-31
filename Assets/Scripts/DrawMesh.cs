@@ -26,7 +26,6 @@ public class DrawMesh : MonoBehaviour {
 
 	void Start () {
         bSpline = GetComponentInParent<BezierSpline>();
-        //not sure how to do this if length needs to change at runtime? maybe keep as is, and just change width through shader?
         mesh = new Mesh();
         meshFilter = GetComponent<MeshFilter>();
         GetComponent<MeshFilter>().mesh = mesh;

@@ -83,10 +83,10 @@ public class Intersection : MonoBehaviour {
             }
         }
 	}
-	
-    private Color ColourAssign(initialLineColourENUM iColour)
+
+    public Color ColourAssign(initialLineColourENUM iColour)
     {
-        switch(iColour)
+        switch (iColour)
         {
             case initialLineColourENUM.LightGrey:
                 {
@@ -111,7 +111,7 @@ public class Intersection : MonoBehaviour {
         }
     }
 
-    private Color ColourAssign(chosenLineColourENUM iColour)
+    public Color ColourAssign(chosenLineColourENUM iColour)
     {
         switch (iColour)
         {
@@ -254,7 +254,6 @@ public class Intersection : MonoBehaviour {
         {
             DrawMesh drawMesh = childLines[activeLine].GetComponentInChildren<DrawMesh>();
             MeshRenderer rend = childLines[activeLine].GetComponentInChildren<MeshRenderer>();
-            drawMesh.StartCoroutine(drawMesh.growLine(rend, confLineSpeed, 1, confCurve));
             drawMesh.StartCoroutine(drawMesh.changeWidth(rend, drawMesh.width, confLineWidth, confCurve));
         }
     }

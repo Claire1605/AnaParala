@@ -13,9 +13,11 @@ public class Score : MonoBehaviour {
     public Image blue;
     public Image red;
 
-    private int greenCount = 0;
-    private int blueCount = 0;
-    private int redCount = 0;
+    public int greenCount = 0;
+    public int blueCount = 0;
+    public int redCount = 0;
+
+    public bool randomColour = false;
 
     void Start () {
         greenScore.text = greenCount.ToString();

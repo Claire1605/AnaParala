@@ -22,6 +22,7 @@ public class Movement : MonoBehaviour {
     [HideInInspector]
     public bool rendDone;
     private bool stage2reached = false;
+    private bool movingInProgress = false;
 
     void Start()
     {
@@ -44,7 +45,8 @@ public class Movement : MonoBehaviour {
         Vector3 position = spline.GetPoint(progress);
         position.z -= 0.2f;
         transform.localPosition = position;
-        line.material.SetFloat("_AlphaHeight", progress);
+        if (!movingInProgress)
+            line.material.SetFloat("_AlphaHeight", progress);
         if (envyLines.Count>0 && progress <0.8f)
         {
             foreach (var item in envyLines)
@@ -57,29 +59,34 @@ public class Movement : MonoBehaviour {
 
     public IEnumerator MoveToLineEnd(float currentProgress, GameObject newLine)
     {
+        movingInProgress = true;
+        line = newLine.GetComponentInChildren<MeshRenderer>();
+        score.UpdateScore(line);
         float i = 0;
         float rate = 2;
         bool done = false;
         while (i < 1 && !done)
         {
             if (progress >= 1)
+            {
                 done = true;
+            }
+               
             i += Time.deltaTime * rate;
             if (!done)
                 transform.localPosition = Vector3.Lerp(spline.GetPoint(currentProgress), spline.GetPoint(1), i);
             yield return new WaitForEndOfFrame();
         }
         spline = newLine.GetComponent<BezierSpline>();
-        line = newLine.GetComponentInChildren<MeshRenderer>();
         progress = 0;
         speed = 10 * Vector3.Distance(spline.GetPoint(1), spline.GetPoint(0));
         showIntersection = false;
         rendDone = false;
-        score.UpdateScore(line);
         if (line.GetComponentInParent<Intersection>().gameObject.tag == "Stage2" && !stage2reached)
         {
             stage2reached = true;
             score.Visible();
         }
+        movingInProgress = false;
     }
 }
