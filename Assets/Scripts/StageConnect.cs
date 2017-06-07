@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class StageConnect : MonoBehaviour {
 
@@ -97,6 +98,40 @@ public class StageConnect : MonoBehaviour {
 
             stageChildren[0].GetComponentInChildren<MeshRenderer>().material.SetColor("_Color", stageChildren[0].GetComponent<Intersection>().initialLineColour);
             stageChildren[1].GetComponentInChildren<MeshRenderer>().material.SetColor("_Color", stageChildren[1].GetComponent<Intersection>().initialLineColour);
+        }
+        else if (connector.tag == "Stage2" && connector.GetComponent<SegmentSetup>().nextStage.gameObject.name == "BRANCH 12")
+        {
+            int r2 = Random.Range(0, 2);
+            int r3 = Random.Range(0, 3);
+
+            if (score.redCount > score.greenCount && score.redCount > score.blueCount
+                || score.redCount == score.greenCount && score.redCount > score.blueCount && r2 == 0
+                || score.redCount == score.blueCount && score.redCount > score.greenCount && r2 == 0
+                || score.redCount == score.blueCount && score.blueCount == score.greenCount && r3 == 0)
+            {
+                stageChildren[0].GetComponent<Intersection>().initialColour = Intersection.initialLineColourENUM.LightRed;
+                stageChildren[0].GetComponent<Intersection>().chosenColour = Intersection.chosenLineColourENUM.Red;
+            }
+            else if (score.greenCount > score.redCount && score.greenCount > score.blueCount
+                || score.redCount == score.greenCount && score.redCount > score.blueCount && r2 == 1
+                || score.greenCount == score.blueCount && score.greenCount > score.redCount && r2 == 1
+                || score.redCount == score.blueCount && score.blueCount == score.greenCount && r3 == 1)
+            {
+                stageChildren[0].GetComponent<Intersection>().initialColour = Intersection.initialLineColourENUM.LightGreen;
+                stageChildren[0].GetComponent<Intersection>().chosenColour = Intersection.chosenLineColourENUM.Green;
+            }
+            else if (score.blueCount > score.greenCount && score.blueCount > score.redCount
+                || score.greenCount == score.blueCount && score.greenCount > score.redCount && r2 == 0
+                || score.redCount == score.blueCount && score.redCount > score.greenCount && r2 == 1
+                || score.redCount == score.blueCount && score.blueCount == score.greenCount && r3 == 2)
+            {
+                stageChildren[0].GetComponent<Intersection>().initialColour = Intersection.initialLineColourENUM.LightBlue;
+                stageChildren[0].GetComponent<Intersection>().chosenColour = Intersection.chosenLineColourENUM.Blue;
+            }
+
+            stageChildren[0].GetComponent<Intersection>().initialLineColour = stageChildren[0].GetComponent<Intersection>().ColourAssign(stageChildren[0].GetComponent<Intersection>().initialColour);
+            stageChildren[0].GetComponent<Intersection>().chosenLineColour = stageChildren[0].GetComponent<Intersection>().ColourAssign(stageChildren[0].GetComponent<Intersection>().chosenColour);
+            stageChildren[0].GetComponentInChildren<MeshRenderer>().material.SetColor("_Color", stageChildren[0].GetComponent<Intersection>().initialLineColour);
         }
         //MAIN RANDOM COLOUR PICKER
         else if (connector.tag == "Stage2" && score.randomColour)

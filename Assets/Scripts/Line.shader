@@ -60,7 +60,7 @@
 				fixed4 col = tex2D(_MainTex, i.uv) * _Color;
 
 				float alpha = _AlphaHeight - i.uv.y;
-				col.a = lerp(0, 4, alpha) + 1;
+				col.a = (lerp(0, 4, alpha) + 1) * _Color.a;
 				//col.rgb *= col.a;
 
 				//UNITY_APPLY_FOG(i.fogCoord, col);

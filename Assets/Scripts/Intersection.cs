@@ -7,7 +7,7 @@ public class Intersection : MonoBehaviour {
     private ColourLibrary colourLibrary;
     public enum initialLineColourENUM
     {
-        LightGrey, LightRed, LightBlue, LightGreen
+        Grey, LightGrey, LightRed, LightBlue, LightGreen
     };
     public enum chosenLineColourENUM
     {
@@ -88,6 +88,10 @@ public class Intersection : MonoBehaviour {
     {
         switch (iColour)
         {
+            case initialLineColourENUM.Grey:
+                {
+                    return colourLibrary.grey;
+                }
             case initialLineColourENUM.LightGrey:
                 {
                     return colourLibrary.lightGrey;
@@ -170,8 +174,6 @@ public class Intersection : MonoBehaviour {
             if (canMoveUp && (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))) //Selecting complete, move to new line
             {
                 MoveToNewLine();
-                Color c = childLines[activeLine].GetComponentInParent<Intersection>().chosenLineColour;
-                StartCoroutine(ColourLerp(activeLine, thisLine.material.color, c));
                 canMoveUp = false;
             }
             //Selecting in progress
