@@ -11,6 +11,7 @@ public class ScreenColour : MonoBehaviour {
     public Color child;
     public Color teenage;
     public Color twenties;
+    public Color twentiesEnd;
     public Color present;
 
     public float babyHeight;
@@ -18,6 +19,7 @@ public class ScreenColour : MonoBehaviour {
     public float childHeight;
     public float teenageHeight;
     public float twentiesHeight;
+    public float twentiesEndHeight;
     public float presentHeight;
 
     private bool beginningDone = false;
@@ -26,6 +28,7 @@ public class ScreenColour : MonoBehaviour {
     private bool childDone = false;
     private bool teenageDone = false;
     private bool twentiesDone = false;
+    private bool twentiesEndDone = false;
     private bool presentDone = false;
 
 
@@ -58,11 +61,16 @@ public class ScreenColour : MonoBehaviour {
         if (player.transform.position.y > twentiesHeight && !twentiesDone)
         {
             twentiesDone = true;
-            StartCoroutine(ChangeScreenColour(twenties, present, twentiesHeight, presentHeight));
+            StartCoroutine(ChangeScreenColour(twenties, twentiesEnd, twentiesHeight, twentiesEndHeight));
+        }
+        if (player.transform.position.y > twentiesEndHeight && !twentiesEndDone)
+        {
+            twentiesEndDone = true;
+            StartCoroutine(ChangeScreenColour(twentiesEnd, present, twentiesEndHeight, presentHeight));
         }
 
         //Camera Zoom
-      //  gameCamera.transform.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y, -15 - ((cameraZoonCurve.Evaluate(player.transform.position.y/100))*45)); //change 100 to whatever max Y is in game
+        //  gameCamera.transform.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y, -15 - ((cameraZoonCurve.Evaluate(player.transform.position.y/100))*45)); //change 100 to whatever max Y is in game
     }
 
     public IEnumerator FadeIn(Color start, Color end)
